@@ -1,1 +1,3 @@
-# flutter-budget-app
+# budget_app
+
+A new Flutter project.
