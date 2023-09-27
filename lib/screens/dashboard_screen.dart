@@ -1,4 +1,4 @@
-import 'package:budget_app/states/data_manager.dart';
+import 'package:budget_app/managers/budget_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,28 +12,23 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  String dropdownValue = months.first;
+  String dropdownValue = months.last;
   @override
   Widget build(BuildContext context) {
-    return Consumer<DataManager>(builder: (context, dataManager, child) {
+    return Consumer<BudgetManager>(builder: (context, manager, child) {
       return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: Icon(Icons.add),
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.grey,
-        ),
+        floatingActionButton: AddTransactionWidget(manager: manager),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DropdownButton(
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                  value: manager.getMonth,
                   underline: const SizedBox(),
                   focusColor: Colors.white,
-                  value: dataManager.getMonth,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                   items: months.map<DropdownMenuItem<String>>((String month) {
                     return DropdownMenuItem(
                       value: month,
@@ -41,16 +36,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     );
                   }).toList(),
                   onChanged: (String? month) {
-                    dataManager.onSelectMonth(month!);
+                    manager.onSelectMonth(month!);
                   }),
               const SizedBox(height: 15),
-              const SizedBox(
-                height: 280.0,
+              SizedBox(
+                height: 250.0,
                 child: Column(
                   children: [
                     CardWidget(
                       title: "Balance",
-                      data: 1000,
+                      data: 10,
                     ),
                     SizedBox(height: 10.0),
                     Row(
@@ -58,14 +53,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         CardWidget(
                           title: "Income",
-                          data: 42000,
+                          data: manager.getUser.last.balance,
                           color: Colors.deepPurpleAccent,
                           mini: true,
                         ),
-                        SizedBox(width: 10.0),
+                        const SizedBox(width: 10.0),
                         CardWidget(
                           title: "Expense",
-                          data: 1000,
+                          data: 10,
                           color: Colors.redAccent,
                           mini: true,
                         ),
@@ -74,6 +69,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
               ),
+              manager.getUser.last.transactions.isNotEmpty
+                  ? TableWidget(user: manager.getUser.last)
+                  : const Expanded(
+                      child: Center(
+                        child: Text("No data available"),
+                      ),
+                    ),
             ],
           ),
         ),

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class CardWidget extends StatefulWidget {
   final String title;
-  final double data;
+  double data;
   final Color color;
   final bool mini;
 
-  const CardWidget({
+  CardWidget({
     super.key,
     required this.title,
-    required this.data,
+    this.data = 0,
     this.color = Colors.orangeAccent,
     this.mini = false,
   });

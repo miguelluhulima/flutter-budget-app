@@ -1,4 +1,4 @@
-import 'package:budget_app/states/app_state_manager.dart';
+import 'package:budget_app/managers/app_state_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

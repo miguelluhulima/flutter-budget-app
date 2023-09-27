@@ -2,7 +2,7 @@ import 'package:budget_app/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'states/managers.dart';
+import 'managers/managers.dart';
 
 void main() {
   runApp(const MainApp());
@@ -17,18 +17,18 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   final _appStateManager = AppStateManager();
-  final _dataManager = DataManager();
+  final _budgetManager = BudgetManager();
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (create) => _appStateManager),
-        ChangeNotifierProvider(create: (create) => _dataManager)
+        ChangeNotifierProvider(create: (create) => _budgetManager)
       ],
       child: MaterialApp(
         theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
             useMaterial3: true),
         home: const Home(),
       ),
