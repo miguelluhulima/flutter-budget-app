@@ -17,10 +17,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Consumer<BudgetManager>(builder: (context, manager, child) {
       User user = manager.getUser.last;
+      int selectedMonth = manager.getMonthList.indexOf(manager.getMonth) + 1;
 
       var income =
           user.transactions.where((element) => element.isExpense == false);
+      var incomeByMonth =
+          income.where((element) => element.dateTime.month == selectedMonth);
       double totalIncome;
+      double totalIncomeByMonth;
       if (income.isEmpty) {
         totalIncome = 0;
       } else {
@@ -28,10 +32,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
             .map((e) => e.amount)
             .reduce((value, element) => value + element);
       }
+      if (incomeByMonth.isEmpty) {
+        totalIncomeByMonth = 0;
+      } else {
+        totalIncomeByMonth = incomeByMonth
+            .map((e) => e.amount)
+            .reduce((value, element) => value + element);
+      }
 
       var expense =
           user.transactions.where((element) => element.isExpense == true);
+      var expenseByMonth =
+          expense.where((element) => element.dateTime.month == selectedMonth);
       double totalExpense;
+      double totalExpenseByMonth;
       if (expense.isEmpty) {
         totalExpense = 0;
       } else {
@@ -39,10 +53,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             .map((e) => e.amount)
             .reduce((value, element) => value + element);
       }
+      if (expenseByMonth.isEmpty) {
+        totalExpenseByMonth = 0;
+      } else {
+        totalExpenseByMonth = expenseByMonth
+            .map((e) => e.amount)
+            .reduce((value, element) => value + element);
+      }
 
       double balance = user.balance + totalIncome - totalExpense;
 
-      int selectedMonth = manager.getMonthList.indexOf(manager.getMonth) + 1;
       return Scaffold(
         floatingActionButton: AddTransactionWidget(manager: manager),
         body: Padding(
@@ -80,14 +100,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         CardWidget(
                           title: "Income",
-                          data: totalIncome,
+                          data: totalIncomeByMonth,
                           color: Colors.deepPurpleAccent,
                           mini: true,
                         ),
                         const SizedBox(width: 10.0),
                         CardWidget(
                           title: "Expense",
-                          data: totalExpense,
+                          data: totalExpenseByMonth,
                           color: Colors.redAccent,
                           mini: true,
                         ),
