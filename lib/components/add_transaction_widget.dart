@@ -1,4 +1,4 @@
-import 'package:budget_app/helper/date_format.dart';
+import 'package:budget_app/helper/date_helper.dart';
 import 'package:budget_app/models/budget.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +22,7 @@ class AddTransactionWidget extends StatelessWidget {
     final List<bool> selectedType = <bool>[true, false];
 
     return FloatingActionButton(
+      tooltip: "Add a transaction",
       onPressed: () => showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -71,10 +72,13 @@ class AddTransactionWidget extends StatelessWidget {
                       });
                     },
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    selectedBorderColor: Colors.red[700],
+                    selectedBorderColor:
+                        selectedType[0] ? Colors.green[700] : Colors.red[700],
                     selectedColor: Colors.white,
-                    fillColor: Colors.red[200],
-                    color: Colors.red[400],
+                    fillColor:
+                        selectedType[0] ? Colors.green[200] : Colors.red[200],
+                    color:
+                        selectedType[0] ? Colors.red[400] : Colors.green[400],
                     constraints: const BoxConstraints(
                       minHeight: 40.0,
                       minWidth: 80.0,
@@ -82,7 +86,7 @@ class AddTransactionWidget extends StatelessWidget {
                     isSelected: selectedType,
                     children: transactionType,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       Transaction transaction = Transaction(

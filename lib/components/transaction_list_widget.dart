@@ -1,4 +1,4 @@
-import 'package:budget_app/helper/date_format.dart';
+import 'package:budget_app/helper/date_helper.dart';
 import 'package:flutter/material.dart';
 
 import '../models/budget.dart';
@@ -18,6 +18,9 @@ class TransactionListWidget extends StatelessWidget {
     final transactions = user.transactions
         .where((element) => element.dateTime.month == month)
         .toList();
+
+    // Widget transactionAmount =
+
     return ListView.builder(
       itemBuilder: (context, index) {
         bool isSameDate = true;
@@ -43,23 +46,48 @@ class TransactionListWidget extends StatelessWidget {
             ),
             ListTile(
                 title: Text(item.category),
-                subtitle: item.isExpense ? Text("Expense") : Text("Income"),
-                trailing: Text(
-                  "\$${item.amount}",
-                  style: TextStyle(
-                    color: item.isExpense ? Colors.redAccent : Colors.green,
-                  ),
+                subtitle: item.isExpense
+                    ? const Text("Expense")
+                    : const Text("Income"),
+                trailing: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "\$${item.amount}",
+                      style: TextStyle(
+                        color: item.isExpense ? Colors.redAccent : Colors.green,
+                        fontSize: 15.0,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    item.isExpense
+                        ? const Icon(Icons.arrow_downward, color: Colors.red)
+                        : const Icon(Icons.arrow_upward, color: Colors.green),
+                  ],
                 ))
           ]);
         } else {
           return ListTile(
               title: Text(item.category),
-              subtitle: item.isExpense ? Text("Expense") : Text("Income"),
-              trailing: Text(
-                "\$${item.amount}",
-                style: TextStyle(
-                  color: item.isExpense ? Colors.redAccent : Colors.green,
-                ),
+              subtitle:
+                  item.isExpense ? const Text("Expense") : const Text("Income"),
+              trailing: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "\$${item.amount}",
+                    style: TextStyle(
+                      color: item.isExpense ? Colors.redAccent : Colors.green,
+                      fontSize: 15.0,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  item.isExpense
+                      ? const Icon(Icons.arrow_downward, color: Colors.red)
+                      : const Icon(Icons.arrow_upward, color: Colors.green),
+                ],
               ));
         }
       },

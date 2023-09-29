@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../components/components.dart';
+import '../models/budget.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -12,11 +13,35 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  String dropdownValue = months.last;
-
   @override
   Widget build(BuildContext context) {
     return Consumer<BudgetManager>(builder: (context, manager, child) {
+      User user = manager.getUser.last;
+
+      var income =
+          user.transactions.where((element) => element.isExpense == false);
+      double totalIncome;
+      if (income.isEmpty) {
+        totalIncome = 0;
+      } else {
+        totalIncome = income
+            .map((e) => e.amount)
+            .reduce((value, element) => value + element);
+      }
+
+      var expense =
+          user.transactions.where((element) => element.isExpense == true);
+      double totalExpense;
+      if (expense.isEmpty) {
+        totalExpense = 0;
+      } else {
+        totalExpense = expense
+            .map((e) => e.amount)
+            .reduce((value, element) => value + element);
+      }
+
+      double balance = user.balance + totalIncome - totalExpense;
+
       int selectedMonth = manager.getMonthList.indexOf(manager.getMonth) + 1;
       return Scaffold(
         floatingActionButton: AddTransactionWidget(manager: manager),
@@ -47,7 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     CardWidget(
                       title: "Balance",
-                      data: 10,
+                      data: balance,
                     ),
                     const SizedBox(height: 10.0),
                     Row(
@@ -55,14 +80,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         CardWidget(
                           title: "Income",
-                          data: manager.getUser.last.balance,
+                          data: totalIncome,
                           color: Colors.deepPurpleAccent,
                           mini: true,
                         ),
                         const SizedBox(width: 10.0),
                         CardWidget(
                           title: "Expense",
-                          data: 10,
+                          data: totalExpense,
                           color: Colors.redAccent,
                           mini: true,
                         ),
@@ -72,12 +97,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              manager.getUser.last.transactions
+              user.transactions
                       .where(
                           (element) => element.dateTime.month == selectedMonth)
                       .isNotEmpty
                   ? TransactionListWidget(
-                      user: manager.getUser.last,
+                      user: user,
                       month: selectedMonth,
                     )
                   : const Expanded(
