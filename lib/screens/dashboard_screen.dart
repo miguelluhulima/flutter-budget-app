@@ -16,6 +16,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<BudgetManager>(builder: (context, manager, child) {
+      int selectedMonth = manager.getMonthList.indexOf(manager.getMonth) + 1;
       return Scaffold(
         floatingActionButton: AddTransactionWidget(manager: manager),
         body: Padding(
@@ -47,7 +48,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       title: "Balance",
                       data: 10,
                     ),
-                    SizedBox(height: 10.0),
+                    const SizedBox(height: 10.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -69,8 +70,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
               ),
-              manager.getUser.last.transactions.isNotEmpty
-                  ? TableWidget(user: manager.getUser.last)
+              SizedBox(height: 10),
+              manager.getUser.last.transactions
+                      .where(
+                          (element) => element.dateTime.month == selectedMonth)
+                      .isNotEmpty
+                  ? TransactionListWidget(
+                      user: manager.getUser.last,
+                      month: selectedMonth,
+                    )
                   : const Expanded(
                       child: Center(
                         child: Text("No data available"),

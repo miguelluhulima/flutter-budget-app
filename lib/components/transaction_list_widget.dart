@@ -3,19 +3,28 @@ import 'package:intl/intl.dart';
 
 import '../models/budget.dart';
 
-class TableWidget extends StatelessWidget {
+class TransactionListWidget extends StatelessWidget {
   final User user;
+  final int month;
 
-  const TableWidget({super.key, required this.user});
+  const TransactionListWidget({
+    super.key,
+    required this.user,
+    required this.month,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final transactions = user.transactions
+        .where((element) => element.dateTime.month == month)
+        .toList();
     return ListView.builder(
       itemBuilder: (context, index) {
         bool isSameDate = true;
-        final String dateString = user.transactions[index].dateTime.toString();
+        final String dateString = transactions[index].dateTime.toString();
         final DateTime date = DateTime.parse(dateString);
-        final item = user.transactions[index];
+        final Transaction item = transactions[index];
+
         if (index == 0) {
           isSameDate = false;
         } else {
@@ -24,11 +33,13 @@ class TableWidget extends StatelessWidget {
           final DateTime prevDate = DateTime.parse(prevDateString);
           isSameDate = date.isSameDate(prevDate);
         }
+
         if (index == 0 || !(isSameDate)) {
           return Column(children: [
             Text(
               date.day == DateTime.now().day ? "Today" : date.formatDate(),
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              style:
+                  const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
             ListTile(
                 title: Text(item.category),
@@ -44,7 +55,7 @@ class TableWidget extends StatelessWidget {
               ));
         }
       },
-      itemCount: user.transactions.length,
+      itemCount: transactions.length,
       shrinkWrap: true,
     );
   }
@@ -59,9 +70,7 @@ extension DateHelper on DateTime {
   }
 
   bool isSameDate(DateTime other) {
-    return this.year == other.year &&
-        this.month == other.month &&
-        this.day == other.day;
+    return year == other.year && month == other.month && day == other.day;
   }
 
   int getDifferenceInDaysWithNow() {

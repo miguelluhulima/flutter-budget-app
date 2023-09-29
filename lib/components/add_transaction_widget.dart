@@ -18,35 +18,51 @@ class AddTransactionWidget extends StatelessWidget {
       onPressed: () => showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: const Text("Add Expense"),
+          title: const Text("Add transaction"),
           content: SizedBox(
-            height: 200,
-            child: Column(children: [
-              const Text("Category"),
-              TextField(controller: categoryController),
-              const Text("Amount"),
-              TextField(controller: amountController),
-              ElevatedButton(
-                onPressed: () async {
-                  selectedDate = await showDatePicker(
-                      context: context,
-                      firstDate: dateToday,
-                      lastDate: dateToday,
-                      initialDate: DateTime(dateToday.year - 5));
-                },
-                child: const Text("Pick date"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Transaction transaction = Transaction(
-                      dateTime: selectedDate ?? dateToday,
-                      amount: double.parse(amountController.text),
-                      category: categoryController.text);
-                  manager.addUserTransaction(transaction, manager.getUser.last);
-                },
-                child: const Text("Submit"),
-              )
-            ]),
+            height: 300,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Category"),
+                  TextField(controller: categoryController),
+                  // const SizedBox(height: 5.0),
+                  const Text("Amount"),
+                  TextField(controller: amountController),
+                  // const SizedBox(height: 5.0),
+                  const Text("Date"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(selectedDate.toString() ?? ""),
+                      ElevatedButton(
+                        onPressed: () async {
+                          selectedDate = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(dateToday.year - 5),
+                            lastDate: dateToday,
+                            initialDate: dateToday,
+                          );
+                        },
+                        child: const Icon(
+                          Icons.calendar_month_rounded,
+                        ),
+                      ),
+                    ],
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Transaction transaction = Transaction(
+                          dateTime: selectedDate ?? dateToday,
+                          amount: double.parse(amountController.text),
+                          category: categoryController.text);
+                      manager.addUserTransaction(
+                          transaction, manager.getUser.last);
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Submit"),
+                  )
+                ]),
           ),
         ),
       ),

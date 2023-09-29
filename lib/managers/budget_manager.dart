@@ -13,17 +13,17 @@ const List<String> months = [
   "September",
   "October",
   "November",
-  "December",
+  "December"
 ];
 
 class BudgetManager extends ChangeNotifier {
   final List<User> _user = <User>[User(id: 0, name: "")];
-  // final List<Transaction> _budget = <Transaction>[];
-  String _monthSelected = months.elementAt(0);
+  String _monthSelected = months.elementAt(DateTime.now().month - 1);
+  final List<String> _monthList = months;
 
   List<User> get getUser => List.unmodifiable(_user);
-  // List<Transaction> get getBudget => List.unmodifiable()
   String get getMonth => _monthSelected;
+  List<String> get getMonthList => _monthList;
 
   void addUser(User user) {
     _user.add(user);
@@ -34,8 +34,8 @@ class BudgetManager extends ChangeNotifier {
 
   void addUserTransaction(Transaction transaction, User user) {
     User currUser = _user.where((element) => element.name == user.name).first;
-    print(currUser.name);
     currUser.transactions = [...currUser.transactions, transaction];
+    currUser.transactions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     notifyListeners();
   }
 
