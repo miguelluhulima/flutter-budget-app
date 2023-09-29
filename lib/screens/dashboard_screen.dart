@@ -13,6 +13,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   String dropdownValue = months.last;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<BudgetManager>(builder: (context, manager, child) {
@@ -70,7 +71,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               manager.getUser.last.transactions
                       .where(
                           (element) => element.dateTime.month == selectedMonth)

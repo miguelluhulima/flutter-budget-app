@@ -43,6 +43,7 @@ class TransactionListWidget extends StatelessWidget {
             ),
             ListTile(
                 title: Text(item.category),
+                subtitle: item.isExpense ? Text("Expense") : Text("Income"),
                 trailing: Text(
                   "\$${item.amount}",
                 ))
@@ -50,6 +51,7 @@ class TransactionListWidget extends StatelessWidget {
         } else {
           return ListTile(
               title: Text(item.category),
+              subtitle: item.isExpense ? Text("Expense") : Text("Income"),
               trailing: Text(
                 "\$${item.amount}",
               ));

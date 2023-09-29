@@ -14,22 +14,27 @@ class AddTransactionWidget extends StatelessWidget {
     final DateTime dateToday = DateTime.now();
     DateTime? selectedDate;
 
+    const List<Widget> transactionType = [
+      Text("Income"),
+      Text("Expense"),
+    ];
+    final List<bool> selectedType = <bool>[true, false];
+
     return FloatingActionButton(
       onPressed: () => showDialog(
         context: context,
-        builder: (BuildContext context) => AlertDialog(
+        builder: (context) => AlertDialog(
           title: const Text("Add transaction"),
-          content: SizedBox(
-            height: 300,
-            child: Column(
+          content: StatefulBuilder(builder: (context, setState) {
+            return SizedBox(
+              height: 350,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("Category"),
                   TextField(controller: categoryController),
-                  // const SizedBox(height: 5.0),
                   const Text("Amount"),
                   TextField(controller: amountController),
-                  // const SizedBox(height: 5.0),
                   const Text("Date"),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,20 +55,46 @@ class AddTransactionWidget extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const Text("Select transaction type: "),
+                  ToggleButtons(
+                    direction: Axis.horizontal,
+                    onPressed: (int index) {
+                      setState(() {
+                        for (int i = 0; i < selectedType.length; i++) {
+                          selectedType[i] = i == index;
+                        }
+                      });
+                    },
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    selectedBorderColor: Colors.red[700],
+                    selectedColor: Colors.white,
+                    fillColor: Colors.red[200],
+                    color: Colors.red[400],
+                    constraints: const BoxConstraints(
+                      minHeight: 40.0,
+                      minWidth: 80.0,
+                    ),
+                    isSelected: selectedType,
+                    children: transactionType,
+                  ),
+                  SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       Transaction transaction = Transaction(
                           dateTime: selectedDate ?? dateToday,
                           amount: double.parse(amountController.text),
-                          category: categoryController.text);
+                          category: categoryController.text,
+                          isExpense: selectedType[1] == true);
                       manager.addUserTransaction(
                           transaction, manager.getUser.last);
                       Navigator.of(context).pop();
                     },
                     child: const Text("Submit"),
                   )
-                ]),
-          ),
+                ],
+              ),
+            );
+          }),
         ),
       ),
       foregroundColor: Colors.white,
