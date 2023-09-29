@@ -1,3 +1,4 @@
+import 'package:budget_app/helper/date_format.dart';
 import 'package:budget_app/models/budget.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,9 @@ class AddTransactionWidget extends StatelessWidget {
         builder: (context) => AlertDialog(
           title: const Text("Add transaction"),
           content: StatefulBuilder(builder: (context, setState) {
+            DateTime date = selectedDate ?? DateTime.now();
+            String dateString = date.formatDate();
+
             return SizedBox(
               height: 350,
               child: Column(
@@ -39,7 +43,7 @@ class AddTransactionWidget extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(selectedDate.toString() ?? ""),
+                      Text(dateString),
                       ElevatedButton(
                         onPressed: () async {
                           selectedDate = await showDatePicker(
@@ -48,6 +52,7 @@ class AddTransactionWidget extends StatelessWidget {
                             lastDate: dateToday,
                             initialDate: dateToday,
                           );
+                          setState(() {});
                         },
                         child: const Icon(
                           Icons.calendar_month_rounded,

@@ -1,5 +1,5 @@
+import 'package:budget_app/helper/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../models/budget.dart';
 
@@ -46,6 +46,9 @@ class TransactionListWidget extends StatelessWidget {
                 subtitle: item.isExpense ? Text("Expense") : Text("Income"),
                 trailing: Text(
                   "\$${item.amount}",
+                  style: TextStyle(
+                    color: item.isExpense ? Colors.redAccent : Colors.green,
+                  ),
                 ))
           ]);
         } else {
@@ -54,29 +57,14 @@ class TransactionListWidget extends StatelessWidget {
               subtitle: item.isExpense ? Text("Expense") : Text("Income"),
               trailing: Text(
                 "\$${item.amount}",
+                style: TextStyle(
+                  color: item.isExpense ? Colors.redAccent : Colors.green,
+                ),
               ));
         }
       },
       itemCount: transactions.length,
       shrinkWrap: true,
     );
-  }
-}
-
-const String dateFormatter = 'MMMM dd, y';
-
-extension DateHelper on DateTime {
-  String formatDate() {
-    final formatter = DateFormat(dateFormatter);
-    return formatter.format(this);
-  }
-
-  bool isSameDate(DateTime other) {
-    return year == other.year && month == other.month && day == other.day;
-  }
-
-  int getDifferenceInDaysWithNow() {
-    final now = DateTime.now();
-    return now.difference(this).inDays;
   }
 }
